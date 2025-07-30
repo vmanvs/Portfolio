@@ -11,14 +11,21 @@ services:
     depends_on:
       - db
 
+
   db:
-    image: postgres:15
+    image: postgres:17-bookworm
     environment:
       POSTGRES_USER: postgresuser
       POSTGRES_PASSWORD: postgrespassword
       POSTGRES_DB: portfolio
+    ports:
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 
+
 volumes:
   db_data:
+
+
+    
