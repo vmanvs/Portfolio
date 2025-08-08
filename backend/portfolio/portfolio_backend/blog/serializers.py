@@ -4,9 +4,12 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from .models import Blog
 
 
-class BlogSerializer(serializers.ModelSerializer):
+class BlogListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ('id', 'title', 'body', 'tags', 'cover_url', 'author')
+        fields = ('id', 'title','tags', 'cover_url', 'author')
 
-
+class BlogDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = ('id', 'title','slug', 'tags', 'body', 'cover_url', 'author')
