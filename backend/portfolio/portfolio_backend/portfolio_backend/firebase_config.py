@@ -1,6 +1,7 @@
 import firebase_admin
 import os
 from firebase_admin import credentials, db
+from useraccount.models import User
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CREDENTIAL_PATH = os.path.join(BASE_DIR, 'protlogger-firebase-adminsdk-fbsvc-d6177e3c40.json')
@@ -28,3 +29,25 @@ def test_firebase_connection():
             print(f'Failed to connect to database: {str(e)}')
             return False
 
+def set_to_database():
+    ref = get_db_ref('users/testuser')
+    ref.set({
+        'user_id': "some_really_complicated_uuid",
+        'resume_access': True,
+    })
+
+def update_database():
+    ref = get_db_ref('users/testuser')
+    ref.set({
+        'user_id': "some_really_complicated_uuid",
+        'resume_access': False,
+    })
+
+def sync_to_database(id):
+    user = User.objects.get(pk=id)
+    access = user.profile.resume_access
+
+    ref = get_db_ref(f'users/{user.id}')
+    ref.set({
+        'resume_access': access,
+    })

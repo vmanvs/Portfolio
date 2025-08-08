@@ -22,6 +22,8 @@ ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(" ") if os.environ.
 
 AUTH_USER_MODEL = 'useraccount.User'
 
+WEBSITE_URL = os.environ.get('WEBSITE_URL')
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -93,7 +95,8 @@ INSTALLED_APPS = [
     'corsheaders',
 
     #created apps
-    'useraccount'
+    'useraccount',
+    'blog'
 ]
 
 SITE_ID = 1

@@ -1,8 +1,8 @@
 import uuid
-from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, UserManager
 from django.conf import settings
 from django.db import models
+
 
 
 class CustomUserManager(UserManager):
@@ -47,7 +47,7 @@ class User(AbstractUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     first_name = models.CharField(max_length=255, blank=True, null=True)
     middle_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
@@ -55,3 +55,14 @@ class UserProfile(models.Model):
     avatar = models.ImageField(upload_to='uploads/avatars', blank=True, null=True)
     about = models.TextField(blank=True, null=True) #This will be a rich text, that will be sent from the frontend
     links = models.JSONField(default=list ,blank=True, null=True)
+    resume_access = models.BooleanField(default=True)
+
+    def avatar_url(self):
+        if self.avatar:
+            return f'{settings.WEBSITE_URL}/{self.avatar.url}'
+        else:
+            return None
+
+
+
+
