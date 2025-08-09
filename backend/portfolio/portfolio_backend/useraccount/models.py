@@ -8,19 +8,13 @@ from django.db import models
 
 
 class CustomUserManager(UserManager):
-    def _create_user(self, username,email, password, **extra_fields):
+    def _create_user(self, email, password, **extra_fields):
 
         print('create method is being used')
         if not email:
             raise ValueError('You must enter an email address')
         email = self.normalize_email(email)
-        if not username:
-            username = email
-        elif username == '':
-            username = email
-        elif username is None:
-            username = email
-        user = self.model(username=username, email=email, **extra_fields)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
 
         user.save(using=self._db)
