@@ -17,6 +17,7 @@ class Tag(models.Model):
                 slug = f'{base_slug}-{count}'
                 count+=1
             self.slug = slug
+
         super().save(*args, **kwargs)
 
 class Blog(models.Model):
@@ -37,6 +38,7 @@ class Blog(models.Model):
                 slug = f'{base_slug}-{count}'
                 count+=1
             self.slug = slug
+
         super().save(*args, **kwargs)
 
     def cover_url(self):

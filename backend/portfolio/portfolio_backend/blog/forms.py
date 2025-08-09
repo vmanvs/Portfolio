@@ -1,5 +1,6 @@
 from django.forms import ModelForm
-from .models import Blog
+from .models import Blog, Tag
+
 
 class BlogForm(ModelForm):
     class Meta:
@@ -12,3 +13,8 @@ class BlogForm(ModelForm):
 
         )
 
+
+class TagForm(ModelForm):
+    class Meta:
+        model = Tag
+        fields = ('name',)
