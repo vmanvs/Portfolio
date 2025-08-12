@@ -46,7 +46,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASSES': 'rest_framework.pagination.LimitOffsetPagination',
 }
 
 CORS_ALLOWED_ORIGINS = [

@@ -24,10 +24,12 @@ class Blog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
-    author = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blogs')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blogs')
     cover = models.ImageField(upload_to='uploads/covers', blank=True, null=True)
     body = models.TextField(blank=True, null=True)
     tags = models.ManyToManyField(Tag, related_name='blogs', blank=True)
+
+    viewable = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
