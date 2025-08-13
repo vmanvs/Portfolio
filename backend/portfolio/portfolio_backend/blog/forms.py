@@ -10,7 +10,6 @@ class BlogForm(ModelForm):
             'body',
             'tags',
             'cover',
-
         )
 
 

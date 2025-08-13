@@ -90,6 +90,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
+    'auth_kit',
+
     'dj_rest_auth',
     'dj_rest_auth.registration',
 
@@ -128,9 +130,10 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE':[
             'profile',
             'email',
+            'openid',
         ],
         'AUTH_PARAMS': {
-            'access_type':'online' #set to offline later
+            'access_type':'offline' #set to offline later
         },
         'OAUTH_PKCE_ENABLED': True,
     },
