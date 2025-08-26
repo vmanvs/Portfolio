@@ -1,6 +1,5 @@
 import os
 from datetime import timedelta
-
 from pathlib import Path
 
 from django.conf.global_settings import AUTH_USER_MODEL
@@ -25,7 +24,7 @@ AUTH_USER_MODEL = 'useraccount.User'
 WEBSITE_URL = os.environ.get('WEBSITE_URL')
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7), ##change this later
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
@@ -116,10 +115,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
+    'useraccount.middleware.JWTMiddleware',
 ]
 
 #allauth settings go here:
+
+SOCIALACCOUNT_ADAPTER = 'useraccount.jwtgen.CustomSocialAccountAdapter'
+
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -139,6 +142,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 
 }
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_SECRET')
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -197,6 +202,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
 
 
 # Internationalization
