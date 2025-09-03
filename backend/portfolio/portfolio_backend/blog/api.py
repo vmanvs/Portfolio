@@ -1,6 +1,8 @@
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from django.db.models import Q
 from .forms import BlogForm, TagForm
 from rest_framework.response import Response
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Blog
 from .serializers import BlogListSerializer, BlogDetailSerializer
@@ -10,13 +12,28 @@ from .serializers import BlogListSerializer, BlogDetailSerializer
 @permission_classes([])
 @authentication_classes([])
 def blog_list_view(request):
-    blogs = Blog.objects.all()
+    #blogs = Blog.objects.all()
     author_id = request.GET.get('author_id', '')  #the author id should be in query params, i.e. URL
+    tags_raw = request.GET.get('tags', None)
+    page_size = int(request.GET.get('limit', '10'))
+    offset = int(request.GET.get('offset', '0'))
     if author_id:
-        blogs = blogs.filter(author_id=author_id)
-    else:
-        blogs = blogs.filter(viewable=True)
+        blogs = Blog.objects.filter(Q(author_id=author_id))[offset:offset+page_size]
 
+    elif tags_raw:
+        tags = tags_raw.split('-') if tags_raw else []
+
+        if tags:
+            query = Q()
+            for value in tags:
+                query |= Q(tags__name_icontains=value)
+            try:
+                blogs = Blog.objects.filter(query, viewable=True)[offset:offset + page_size]  # check this function
+            except ObjectDoesNotExist:
+                return Response({'data': 'No such blog', 'success': False}, status=404)
+
+    else:
+        blogs = Blog.objects.filter(viewable=True)[offset:offset+page_size] #check this function
 
     serializer = BlogListSerializer(blogs, many=True)
     print(request.user)
