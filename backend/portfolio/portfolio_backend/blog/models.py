@@ -30,6 +30,8 @@ class Blog(models.Model):
     tags = models.ManyToManyField(Tag, related_name='blogs', blank=True)
 
     viewable = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False) # We need extra logic that if a blog is deleted, set the viewable to false
+                                                #automatically
 
     def save(self, *args, **kwargs):
         if not self.slug:

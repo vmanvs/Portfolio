@@ -18,7 +18,7 @@ def blog_list_view(request):
     page_size = int(request.GET.get('limit', '10'))
     offset = int(request.GET.get('offset', '0'))
     if author_id:
-        blogs = Blog.objects.filter(Q(author_id=author_id))[offset:offset+page_size]
+        blogs = Blog.objects.filter(Q(author_id=author_id) & Q(deleted=False))[offset:offset+page_size]
 
     elif tags_raw:
         tags = tags_raw.split('-') if tags_raw else []
@@ -104,6 +104,21 @@ def blog_update(request, pk):
     else:
         return Response({'errors': 'Unauthorized Access', 'success': False,}, status=400)
 
+@api_view(['GET'])
+def blog_delete(request, pk):
+    try:
+        blog = Blog.objects.get(pk=pk)
+    except Blog.DoesNotExist:
+        return Response({'data': 'Blog does not exist', 'success': False}, status=404)
+
+    if request.user == blog.author:
+        blog.deleted = True
+        blog.viewable = False
+        blog.save()
+        return Response({'success': True}, status=200)
+    else:
+        return Response({'errors': 'Unauthorized Access', 'success': False,}, status=400)
+
 @api_view(['POST'])
 def tag_create(request):
     tag_form = TagForm(request.data, request.FILES)
@@ -113,3 +128,7 @@ def tag_create(request):
     else:
         print('errors', tag_form.errors, tag_form.non_field_errors())
         return Response({'errors': tag_form.errors.as_json(), 'success': False,}, status=400)
+
+
+
+
